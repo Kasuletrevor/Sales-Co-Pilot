@@ -99,3 +99,48 @@ def generate_pre_call_report(prospect_summary: str, company_summary: str) -> str
     }
     
     return json.dumps(result)
+
+
+@tool
+def search_tool(query: str) -> str:
+    """Search the web for information about a query."""
+    with DDGS() as ddgs:
+        results = ddgs.text(query, max_results=5)
+        return json.dumps([result for result in results])
+
+@tool
+def wiki_tool(topic: str) -> str:
+    """Search Wikipedia for information about a topic."""
+    try:
+        # Search for the page
+        search_results = wikipedia.search(topic, results=1)
+        if not search_results:
+            return json.dumps({"error": f"No Wikipedia article found for '{topic}'"})
+            
+        # Get the page content
+        page = wikipedia.page(search_results[0])
+        
+        result = {
+            "title": page.title,
+            "url": page.url,
+            "summary": wikipedia.summary(page.title, sentences=5),
+            "content_preview": page.content[:1000] + "..."
+        }
+        
+        return json.dumps(result)
+    except wikipedia.exceptions.DisambiguationError as e:
+        return json.dumps({"error": f"Disambiguation error: {str(e)}"})
+    except wikipedia.exceptions.PageError:
+        return json.dumps({"error": f"No Wikipedia article found for '{topic}'"})
+    except Exception as e:
+        return json.dumps({"error": f"Error: {str(e)}"})
+
+@tool
+def save_tool(content: str, filename: str) -> str:
+    """Save content to a file."""
+    try:
+        with open(filename, 'w', encoding='utf-8') as f:
+            f.write(content)
+        return json.dumps({"success": True, "message": f"Content saved to {filename}"})
+    except Exception as e:
+        return json.dumps({"success": False, "error": str(e)})
