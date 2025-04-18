@@ -83,3 +83,19 @@ def company_researcher(company_url: str) -> str:
     }
     
     return json.dumps(result)
+
+
+@tool
+def generate_pre_call_report(prospect_summary: str, company_summary: str) -> str:
+    """
+    Generate a pre-call report combining prospect and company research.
+    Structures the information into an actionable format for sales reps.
+    """
+    # Format for saving
+    result = {
+        "prospect_summary": prospect_summary,
+        "company_summary": company_summary,
+        "report_status": "generated"
+    }
+    
+    return json.dumps(result)
