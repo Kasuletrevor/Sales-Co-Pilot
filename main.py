@@ -11,5 +11,5 @@ load_dotenv()
 # Initialize the LLM
 llm = ChatOpenAI(model="gpt-4", temperature=0)
 
-response = llm.invoke("What is the capital of France?")
-print(response)
+# response = llm.invoke("What is the capital of France?")
+# print(response)
