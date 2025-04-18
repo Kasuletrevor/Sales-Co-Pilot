@@ -46,3 +46,21 @@ agent = create_tool_calling_agent(llm, tools, system_prompt)
 
 # Create the agent executor
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+
+def research_prospect(linkedin_url):
+    """Research a prospect based on their LinkedIn URL"""
+    return agent_executor.invoke({
+        "input": f"Research this prospect with LinkedIn URL: {linkedin_url}"
+    })
+
+def research_company(company_url):
+    """Research a company based on their website URL"""
+    return agent_executor.invoke({
+        "input": f"Research this company with URL: {company_url}"
+    })
+
+def generate_report(prospect_data, company_data):
+    """Generate a pre-call report based on prospect and company research"""
+    return agent_executor.invoke({
+        "input": f"Generate a pre-call report for this prospect: {prospect_data} and company: {company_data}"
+    })
