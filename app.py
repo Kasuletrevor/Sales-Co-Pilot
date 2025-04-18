@@ -222,7 +222,7 @@ with st.sidebar:
     # Clear chat history button
     if st.button("🧹 Clear Chat History"):
         st.session_state.chat_history = []
-        st.experimental_rerun()
+        st.rerun()
     
     # Model selection
     st.subheader("Model Settings")
