@@ -133,7 +133,7 @@ with st.expander("About this app", expanded=False):
 chat_container = st.container()
 
 # User input area
-with st.form("user_input_form", clear_on_submit=True):
+with st.form("user_input_form", clear_on_submit=False):
     user_input = st.text_area("Enter your request:", 
                               placeholder="Example: I'm meeting John Smith from Acme Corp tomorrow. His LinkedIn is www.linkedin.com/in/john-smith and the company website is https://acmecorp.com. Can you prepare a pre-call report?",
                               height=100)
@@ -191,7 +191,7 @@ if submit_button and user_input:
 
 # Display chat history
 with chat_container:
-    for message in reversed(st.session_state.chat_history):  # Display newest messages first
+    for message in st.session_state.chat_history:  # Display newest messages first
         if message["role"] == "user":
             with st.chat_message("user"):
                 st.write(f"**{message.get('timestamp', '')}**")
