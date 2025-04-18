@@ -249,4 +249,4 @@ with st.sidebar:
     # App info
     st.markdown("---")
     st.caption("Sales Co-Pilot v1.0")
-    st.caption("© 2025 Big Boy Recruits")
+    st.caption("© 2025 Kin Keepers")
