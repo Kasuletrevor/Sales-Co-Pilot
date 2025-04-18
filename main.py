@@ -40,7 +40,6 @@ tools = [
     save_tool
 ]
 
-
 # Create the agent
 agent = create_tool_calling_agent(llm, tools, system_prompt)
 
