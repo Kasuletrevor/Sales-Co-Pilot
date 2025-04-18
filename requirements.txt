@@ -6,3 +6,4 @@ python-dotenv
 pydantic
 duckduckgo-search
 beautifulsoup4
+streamlit
