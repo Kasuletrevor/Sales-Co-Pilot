@@ -4,7 +4,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain.agents import create_tool_calling_agent, AgentExecutor
-# from tools import search_tool, wiki_tool, save_tool
+from tools import *
 
 load_dotenv()
 
@@ -29,3 +29,13 @@ Your capabilities:
 When asked to research a prospect or company, always use the appropriate tools.
 Provide concise, sales-focused insights that would be valuable for a sales representative.
 """
+
+# List of tools available to the agent
+tools = [
+    prospect_researcher,
+    company_researcher, 
+    generate_pre_call_report,
+    search_tool,
+    wiki_tool,
+    save_tool
+]
