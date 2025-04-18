@@ -64,3 +64,31 @@ def generate_report(prospect_data, company_data):
     return agent_executor.invoke({
         "input": f"Generate a pre-call report for this prospect: {prospect_data} and company: {company_data}"
     })
+
+
+if __name__ == "__main__":
+    print("🤖 AI Sales Research Agent")
+    print("1. Research Prospect")
+    print("2. Research Company")
+    print("3. Generate Pre-Call Report")
+    
+    choice = input("Enter your choice (1-3): ")
+    
+    if choice == "1":
+        linkedin_url = input("Enter LinkedIn URL: ")
+        result = research_prospect(linkedin_url)
+        print(result["output"])
+        
+    elif choice == "2":
+        company_url = input("Enter company website URL: ")
+        result = research_company(company_url)
+        print(result["output"])
+        
+    elif choice == "3":
+        prospect_summary = input("Enter prospect summary or paste from previous research: ")
+        company_summary = input("Enter company summary or paste from previous research: ")
+        result = generate_report(prospect_summary, company_summary)
+        print(result["output"])
+        
+    else:
+        print("Invalid choice. Please run the program again.")
