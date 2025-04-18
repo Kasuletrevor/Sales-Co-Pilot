@@ -64,3 +64,22 @@ def prospect_researcher(linkedin_url: str) -> str:
     }
     
     return json.dumps(result)
+
+
+@tool
+def company_researcher(company_url: str) -> str:
+    """
+    Research a company based on their website URL.
+    Scrapes the company website and generates a summary relevant to sales.
+    """
+    # Scrape company website
+    company_text = scrape_website(company_url)
+    
+    # Format for saving (optional)
+    result = {
+        "company_url": company_url,
+        "scraped_content": company_text[:1000] + "...",  # Truncated for readability
+        "full_content_length": len(company_text)
+    }
+    
+    return json.dumps(result)
