@@ -39,3 +39,10 @@ tools = [
     wiki_tool,
     save_tool
 ]
+
+
+# Create the agent
+agent = create_tool_calling_agent(llm, tools, system_prompt)
+
+# Create the agent executor
+agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
