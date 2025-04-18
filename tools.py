@@ -46,3 +46,21 @@ def scrape_website(url: str) -> str:
         return text[:15000]  # Limit to ~15k characters
     except Exception as e:
         return f"Error scraping website: {str(e)}"
+    
+@tool
+def prospect_researcher(linkedin_url: str) -> str:
+    """
+    Research a prospect based on their LinkedIn profile URL.
+    Scrapes the public profile and generates a summary with key insights.
+    """
+    # Scrape LinkedIn profile
+    profile_text = scrape_website(linkedin_url)
+    
+    # Format for saving (optional)
+    result = {
+        "linkedin_url": linkedin_url,
+        "scraped_content": profile_text[:1000] + "...",  # Truncated for readability
+        "full_content_length": len(profile_text)
+    }
+    
+    return json.dumps(result)
