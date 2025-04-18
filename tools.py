@@ -56,14 +56,53 @@ def prospect_researcher(linkedin_url: str) -> str:
     # Scrape LinkedIn profile
     profile_text = scrape_website(linkedin_url)
     
-    # Format for saving (optional)
-    result = {
-        "linkedin_url": linkedin_url,
-        "scraped_content": profile_text[:1000] + "...",  # Truncated for readability
-        "full_content_length": len(profile_text)
-    }
+    # If scraping failed or returned limited content, include an error message
+    if profile_text.startswith("Error scraping website"):
+        return json.dumps({
+            "linkedin_url": linkedin_url,
+            "error": profile_text,
+            "success": False
+        })
     
-    return json.dumps(result)
+    # Use LLM to generate a summary from the scraped content
+    summarization_prompt = f"""
+    Can you please take this LinkedIn profile information and summarize this into a 300-word summary with details on the user's background, key career experience, current role and duration in role. This is a summary for a sales rep to prepare for a call, so make sure all the relevant details are there for this purpose, it should be an overview that will rapidly bring someone up to speed on a prospect they are about to get on call with.
+
+    Make it read like a resume, with Name, location, follower count, current company and position all listed one after the other at the top, before you break into an overview section and then experience etc.
+
+    Here is the information:
+    {profile_text}
+    """
+    
+    # You'd typically call your LLM here with the summarization_prompt
+    # For example, using a helper function that accesses your ChatOpenAI instance
+    # The code below assumes you have a summarize_with_llm function
+    
+    try:
+        # Import OpenAI here to avoid circular imports if needed
+        from langchain_openai import ChatOpenAI
+        
+        # Create a one-off LLM instance for this summarization
+        summarizer = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        summary = summarizer.invoke(summarization_prompt).content
+        
+        # Format result
+        result = {
+            "linkedin_url": linkedin_url,
+            "prospect_summary": summary,
+            "success": True
+        }
+        
+        return json.dumps(result)
+    
+    except Exception as e:
+        # If LLM summarization fails, return the raw data with an error note
+        return json.dumps({
+            "linkedin_url": linkedin_url,
+            "scraped_content": profile_text[:1000] + "..." if len(profile_text) > 1000 else profile_text,
+            "error": f"Failed to summarize with LLM: {str(e)}",
+            "success": False
+        })
 
 
 @tool
@@ -75,14 +114,59 @@ def company_researcher(company_url: str) -> str:
     # Scrape company website
     company_text = scrape_website(company_url)
     
-    # Format for saving (optional)
-    result = {
-        "company_url": company_url,
-        "scraped_content": company_text[:1000] + "...",  # Truncated for readability
-        "full_content_length": len(company_text)
-    }
+    # If scraping failed or returned limited content, include an error message
+    if company_text.startswith("Error scraping website"):
+        return json.dumps({
+            "company_url": company_url,
+            "error": company_text,
+            "success": False
+        })
     
-    return json.dumps(result)
+    # Use LLM to generate a summary from the scraped content
+    summarization_prompt = f"""
+    Please analyze this company website information and create a comprehensive summary for a sales representative. 
+    The summary should include:
+    
+    1. Company name and location
+    2. Industry and market position
+    3. Key products or services offered
+    4. Target customers or markets
+    5. Company size and reach (if available)
+    6. Recent news, developments, or initiatives
+    7. Potential pain points or challenges the company might be facing
+    8. Possible value propositions that would appeal to this company
+    
+    Focus on information that would be most valuable for a sales representative preparing for a call.
+    
+    Company website content:
+    {company_text}
+    """
+    
+    try:
+        # Import OpenAI here to avoid circular imports if needed
+        from langchain_openai import ChatOpenAI
+        
+        # Create a one-off LLM instance for this summarization
+        summarizer = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+        summary = summarizer.invoke(summarization_prompt).content
+        
+        # Format result
+        result = {
+            "company_url": company_url,
+            "company_summary": summary,
+            "success": True
+        }
+        
+        return json.dumps(result)
+    
+    except Exception as e:
+        # If LLM summarization fails, return the raw data with an error note
+        return json.dumps({
+            "company_url": company_url,
+            "scraped_content": company_text[:1000] + "..." if len(company_text) > 1000 else company_text,
+            "error": f"Failed to summarize with LLM: {str(e)}",
+            "success": False
+        })
 
 
 @tool
